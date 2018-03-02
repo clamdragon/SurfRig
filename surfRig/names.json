@@ -1,0 +1,12 @@
+{
+    "convention": "{name}_{type}_{num:02}",
+    "surface": "surf",
+    "rig group": "surfRigGrp",
+    "control": "ctrl",
+    "control group": "stickyCtrlGrp",
+    "offset group": "offset",
+    "parent": "par",
+    "surface controls group": "surfCtrls",
+    "joint": "stickyJnt",
+    "joint group": "surfRigJnts"
+}
