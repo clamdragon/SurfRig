@@ -5,6 +5,9 @@ Originally intended for face rigging, as joints sliding over surfaces mimic fles
 Included in download is the bkTools utilities package, which is a collection of function set for Maya.
 Also included is Qt.py (made and maintained here: https://github.com/mottosso/Qt.py)
 
+To use SurfRig, execute the following from inside Maya:
+"from bkTools import surfRig; surfRig.main()"
+
 Demo videos here:
 https://vimeo.com/253358401
 https://vimeo.com/254054248
