@@ -11,7 +11,7 @@ INSTALLATION AND USE:
 To do this with git, navigate to your directory and do:
 git clone https://github.com/clamdragon/SurfRig.git bkTools
 
-OR, download surfRig-release.zip and unzip bkTools into your directory.
+OR, download surfRig-v1.0.zip and unzip bkTools into your directory.
 
 2) To use SurfRig, execute the following from inside Maya:
 "from bkTools import surfRig; surfRig.main()"
