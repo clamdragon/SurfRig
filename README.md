@@ -14,7 +14,7 @@ git clone https://github.com/clamdragon/SurfRig.git bkTools
 OR, download as ZIP and unzip into your directory. Unzipped folder needs to be renamed "bkTools".
 
 2) To use SurfRig, execute the following python code from inside Maya:
->>>from bkTools import surfRig; surfRig.main()
+`from bkTools import surfRig; surfRig.main()`
 
 Demo videos here:
 https://vimeo.com/253358401
