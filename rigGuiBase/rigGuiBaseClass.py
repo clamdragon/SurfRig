@@ -1,3 +1,4 @@
+import bkTools.mayaSceneUtil
 from bkTools.Qt import QtCore, QtGui, QtWidgets
 from bkTools import rigCtrlUtil as rcu, animUtil as au
 import maya.OpenMaya as om
@@ -243,7 +244,7 @@ class RigGuiBase(rigGuiBaseQt.Ui_RigGuiBaseQt, QtWidgets.QWidget):
             return
 
         # make a single chunk in maya undo queue
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             if match.isChecked():
                 if mode == "fk":
                     self.matchFkToIk(limb)
@@ -560,7 +561,7 @@ class RigGuiBase(rigGuiBaseQt.Ui_RigGuiBaseQt, QtWidgets.QWidget):
         allCtrls = self.getAllControls()
         sel = [c for c in sel if c in allCtrls]
         # make resetting ALL a single undo operation
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             for s in sel:
                 au.resetCtrl(s)
 
@@ -598,7 +599,7 @@ class RigGuiBase(rigGuiBaseQt.Ui_RigGuiBaseQt, QtWidgets.QWidget):
         #ctrls = [c for c in sel if c in modeCtrls]
         ctrls = [c for c in modeCtrls if c in sel]
 
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             # find out if any ctrls selected are FK/IK controls
             # if so, just add the switch ctrl object to the selection list
             # so its values are flipped along with S/R/T

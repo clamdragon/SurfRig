@@ -1,4 +1,6 @@
 import pymel.core as pmc
+
+import bkTools.mayaSceneUtil
 from bkTools import rigCtrlUtil as rcu, matrixUtil as mu
 import jointControls as jc
 
@@ -109,7 +111,7 @@ def setParentStickyGrp(ctrl, parCtrl, n, rotOrder):
     via its ctrlGrp and the parGrp's wtAddMatrix"""
     # connect new ctrlGrp statPosi to parGrp
     parWtMat = parCtrl.wtMat.get()
-    i = rcu.nextAvailableIndex(parWtMat.wtMatrix)
+    i = bkTools.mayaSceneUtil.nextAvailableIndex(parWtMat.wtMatrix)
 
     ctrlMat = getInvMat(ctrl, parCtrl, n, rotOrder[-1])
     ctrlMat >> parWtMat.wtMatrix[i].matrixIn
@@ -194,7 +196,7 @@ def connectParentXforms(parCtrl, constGrp, constXform, n):
     wtAttr >> transScl.inAlpha
     constXform.outputTranslate >> transScl.inColor
 
-    i = rcu.nextAvailableIndex(constT.input3D)
+    i = bkTools.mayaSceneUtil.nextAvailableIndex(constT.input3D)
 
     # now just add the weighted xforms to the pile
     rotScl.outColor >> constR.input3D[i]
@@ -212,7 +214,7 @@ def connectParentVis(parCtrl, constGrp, n):
         multiVis = pmc.nt.PlusMinusAverage(n=n.format(type="vis"))
         multiVis.output1D >> constGrp.visibility
 
-    i = rcu.nextAvailableIndex(multiVis.input1D)
+    i = bkTools.mayaSceneUtil.nextAvailableIndex(multiVis.input1D)
     parCtrl.showChildControls >> multiVis.input1D[i]
 
 
@@ -220,7 +222,7 @@ def unparentControl():
     """Slot for unparent selected button. Deletes incoming matrix nodes
     and resets xforms. Also removes matrix entry from parent objects ctrlGrp"""
     ctrls = [s for s in pmc.ls(sl=True) if hasattr(s, "parentControls")]
-    with rcu.MayaUndoChunkManager():
+    with bkTools.mayaSceneUtil.MayaUndoChunkManager():
         for ctrl in ctrls:
             try:
                 ctrlGrp = ctrl.controlGroup.get()
