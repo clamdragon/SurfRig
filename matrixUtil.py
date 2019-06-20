@@ -10,7 +10,9 @@ __author__ = "Brendan Kelly"
 getVectorForAxis
 getAxisForVector
 arbitraryOrthoVec
+angleBetween
 rotMat
+reflectOver
 matrixFromVectors
 xformFromSpaces
 orientConstInOtherSpace
@@ -42,11 +44,6 @@ def arbitraryOrthoVec(v):
         return pmc.dt.Vector(0, v.z, -v.y)
 
 
-def rotMat(inMat):
-    """Return rotations-only matrix of given matrix"""
-    return pmc.dt.TransformationMatrix(inMat.get()).asRotateMatrix()
-
-
 def angleBetween(v1, v2, rotOrd="XYZ"):
     """Just like Maya's build in angleBetween command but accepts
     a rotOrder arg for different rotation orders. Locked to Euler results."""
@@ -58,6 +55,39 @@ def angleBetween(v1, v2, rotOrd="XYZ"):
     e.setDisplayUnit("degrees")
 
     return e.x, e.y, e.z
+
+
+def rotMat(inMat):
+    """Return rotations-only matrix of given matrix"""
+    return pmc.dt.TransformationMatrix(inMat.get()).asRotateMatrix()
+
+
+def get_reflection_over(orig_mtx, space=None, axis="x"):
+    """Get worldspace matrix representing the reflection of orig
+    over the given axis of the given space. Result is standard scale.
+    - orig_mtx: matrix to reflect. Assumed to be worldspace.
+    - space: the space (matrix) in which to perform the reflection.
+    Default is ID mtx (worldspace).
+    - axis: the axis (of space mtx) over which to reflect. String of
+    x, y and/or z, default x."""
+    axis = axis.lower()
+    if not space:
+        space = pmc.dt.Matrix()
+    rfl_mtx = pmc.dt.Matrix()
+    if "x" in axis:
+        rfl_mtx.a00 = -1
+    if "y" in axis:
+        rfl_mtx.a11 = -1
+    if "z" in axis:
+        rfl_mtx.a22 = -1
+
+    # simplify by getting the obj relative to space, which allows
+    # the use of standard eigenvector reflection.
+    obj_mtx = orig_mtx * space.inverse()
+    fx = pmc.dt.TransformationMatrix(obj_mtx * rfl_mtx)
+    fx.setScale((1, 1, 1), "transform")
+    # now undo the space fuxx0ring
+    return fx * space
 
 
 def matrixFromVectors(name="customMatrix", x=None, y=None, z=None, pos=None):
@@ -145,7 +175,7 @@ def orientConstInOtherSpace(src, tar, otherMatrix, n=None, activeOffset=False):
 
 
 def printMatrix(m):
-    """Print matrix in an easy-to-read way"""
+    """Print matrix ATTR in an easy-to-read way"""
     print("\n{0}".format(m.nodeName()))
     print(m.longName())
     for r in m.get():

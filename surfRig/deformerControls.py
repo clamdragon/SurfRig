@@ -1,4 +1,6 @@
 import pymel.core as pmc
+
+import bkTools.mayaSceneUtil
 from bkTools import rigCtrlUtil as rcu, matrixUtil as mu, surfaceUtil as su
 import jointControls as jc
 
@@ -254,9 +256,9 @@ def ctrlBlendshapes():
 
 def addBlendshapesToCtrls(surf):
     """Initialize a surface for easy blendshape controlling"""
-    with rcu.MayaUndoChunkManager():
-        addTo = rcu.addNodeToAssetCB(surf.container.get())
-        with rcu.NodeOrganizer(addTo):
+    with bkTools.mayaSceneUtil.MayaUndoChunkManager():
+        addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(surf.container.get())
+        with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
             shape = surf.blendDriver.inputs(shapes=True)[0]
 
             #for bs in surf.create.inputs(type="blendShape"):
@@ -267,7 +269,7 @@ def addBlendshapesToCtrls(surf):
             for ctrl in surf.controls.get():
                 # .hasChild() is recursive across generations
                 if ctrl not in parents:
-                    rcu.addShapeToTrans(shape, ctrl)
+                    bkTools.mayaSceneUtil.addShapeToTrans(shape, ctrl)
 
 
 def matchBlendshapeInputs(blendNode, driver):
@@ -346,7 +348,7 @@ def mergeBlendshapes():
     drivers = list(set([s.blendDriver.inputs(shapes=True)[0] for s in surfs]))
     #newName = rcu.avgMayaName([d.name() for d in drivers])
     top = drivers.pop()
-    with rcu.MayaUndoChunkManager():
+    with bkTools.mayaSceneUtil.MayaUndoChunkManager():
         # top.getTransform().rename(newName+"_DAG")
         # top.rename(newName)
         for old in drivers:
@@ -381,6 +383,6 @@ def mergeBlendshapes():
                 top.message >> oldSurf.blendDriver
 
             for par in old.listRelatives(allParents=True):
-                rcu.addShapeToTrans(top, par)
+                bkTools.mayaSceneUtil.addShapeToTrans(top, par)
 
             pmc.delete(old)

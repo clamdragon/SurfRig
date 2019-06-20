@@ -7,8 +7,8 @@ import traceback
 from bkTools.Qt import QtCompat, QtWidgets, QtGui, QtCore, _loadUi #QtUiTools
 import pymel.core as pmc
 from maya.OpenMayaUI import MQtUtil
-#from pyqt4topyqt5 import toPyside2
-import convert2pyside2
+# from pyqt4topyqt5 import toPyside2
+# import convert2pyside2
 try:
     import shiboken2
     import pyside2uic
@@ -52,6 +52,12 @@ def getMayaMainWindow():
     mayaWin = MQtUtil.mainWindow()
     if mayaWin:
         return shiboken2.wrapInstance(long(mayaWin), QtWidgets.QMainWindow)
+
+
+def minimizeSubWindows():
+    main = getMayaMainWindow()
+    for win in set(w for w in QtWidgets.QApplication.topLevelWidgets() if w.isVisible() and w != main):
+        win.setWindowState(QtCore.Qt.WindowMinimized)
 
 
 # Convenience function to get mainwindow child window of given name
@@ -300,6 +306,14 @@ def getUserFiles(description="Python File", ext=".py"):
     return inFiles
 
 
+def get_float_value(title="Enter value", label="Enter a float value"):
+    r = QtWidgets.QInputDialog.getDouble(getMayaMainWindow(), title, label)
+    if not r[1]:
+        raise RuntimeError("No valid value entered!")
+    else:
+        return r[0]
+
+
 # load a .py gui file
 # undefined behavior for invalid files
 def loadPyGui(f=None):
@@ -364,3 +378,14 @@ def readSettings(fileName, settingNames):
     for s in settingNames:
         result[s] = qSet.value(s, None)
     return result
+
+
+def option_box(*args):
+    """
+    args must be tuples of (button_text, function)
+    """
+    win = QtWidgets.QMessageBox(getMayaMainWindow())
+    for opt, func in args:
+        but = win.addButton(opt, win.AcceptRole)
+        but.clicked.connect(func)
+    win.exec_()

@@ -9,6 +9,9 @@ along the surface. """
 
 from functools import partial
 import pymel.core as pmc
+
+import bkTools.mayaSceneUtil
+import bkTools.skinUtil
 from bkTools import (rigCtrlUtil as rcu, qtUtil as qtu,
                      matrixUtil as mu, surfaceUtil as su)
 import surfRigUi, jointControls as jc, parentControls as pc, deformerControls as dc
@@ -90,7 +93,7 @@ def syncSliderAndCtrl(slider, attr, mult, recentlyRigged, val):
     if not surfs:
         surfs = recentlyRigged
 
-    with rcu.MayaUndoChunkManager():
+    with bkTools.mayaSceneUtil.MayaUndoChunkManager():
         for surf in surfs:
             try:
                 surf.attr(attr).set(val)
@@ -102,7 +105,7 @@ def syncSliderAndCtrl(slider, attr, mult, recentlyRigged, val):
 def resetBindPose():
     """Slot for "reset bind pose" button, get selected transforms
     and pass to skinCluster editing function"""
-    with rcu.MayaUndoChunkManager():
+    with bkTools.mayaSceneUtil.MayaUndoChunkManager():
         meshes = pmc.ls(sl=True, transforms=True)
         if not meshes:
             pmc.warning("Select skinned mesh objects to reset bind pose.")
@@ -122,7 +125,7 @@ def resetBindPose():
                             "Skipped.".format(mesh.name()))
                 continue
 
-            rcu.setBindPose(mesh)
+            bkTools.skinUtil.setBindPose(mesh)
 
 
 """
@@ -289,7 +292,7 @@ class SurfaceRigger(object):
 
     def __init__(self):
         # ensure that the required built-in plugins are enabled OR disabled!
-        unknownPlugins = rcu.checkPlugins(__pluginRequirements__)
+        unknownPlugins = bkTools.mayaSceneUtil.checkPlugins(__pluginRequirements__)
         if unknownPlugins:
             pmc.warning("The following required plugins are missing:\n"
                         "{0}".format("\n".join(unknownPlugins)))
@@ -367,7 +370,7 @@ class SurfaceRigger(object):
 
         # read the user-editable json and set object name dict to
         # defaults + json, priority json (2nd item in list add)
-        names = rcu.readJson(rcu.mergeRelPath(__file__, "names.json"))
+        names = bkTools.mayaSceneUtil.readJson(bkTools.mayaSceneUtil.mergeRelPath(__file__, "names.json"))
         self.updateNameDict(dict(defaultNames.items() + names.items()))
         self.ui.show()
 
@@ -377,13 +380,13 @@ class SurfaceRigger(object):
         Open file dialog to load a JSON file and read it for relevant keys"""
         if not data:
             f = qtu.getUserFiles(description="Naming Conventions", ext=".json")[0]
-            data = rcu.readJson(f)
+            data = bkTools.mayaSceneUtil.readJson(f)
             # might have lots of unnecessary keys, but who cares
         
         self.names.update(data)
         # update the load JSON button
         self.ui.nameButton.setToolTip(
-            "Current name dictionary is:\n" + rcu.formatDict(self.names) +
+            "Current name dictionary is:\n" + bkTools.mayaSceneUtil.formatDict(self.names) +
             "\nLoad a different JSON to change values for any/all keys.")
 
         print("Name conventions set.")
@@ -446,7 +449,7 @@ class SurfaceRigger(object):
         "Simple" arg indicates simple ie 2x3 nurbs plane, otherwise
         it's a full edge-guided surface."""
 
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             objName = self.ui.surfNameEdit.text()
             if not objName:
                 pmc.warning(
@@ -475,7 +478,7 @@ class SurfaceRigger(object):
     @qtu.SlotExceptionRaiser
     def initUserSurf(self):
         """Get selected user surfaces and pass along to initExisting"""
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             surfs = [t for t in pmc.ls(sl=True, transforms=True) if isinstance(
                 t.getShape(), pmc.nt.NurbsSurface)]
             for surf in surfs:
@@ -551,7 +554,7 @@ class SurfaceRigger(object):
         sCtrlsGrp.message >> surf.sCtrlsGrp
         jntGrp.message >> surf.jntGrp
 
-        with rcu.NodeOrganizer(rcu.addNodeToAssetCB(container)):
+        with bkTools.mayaSceneUtil.NodeOrganizer(bkTools.mayaSceneUtil.addNodeToAssetCB(container)):
             shape = rcu.createBlankShape(n.format(type="blendshapes"))
             shape.message >> surf.blendDriver
             shape.getTransform().setParent(surf.sCtrlsGrp.get())
@@ -594,9 +597,9 @@ class SurfaceRigger(object):
             pmc.warning("Rig joint not named. Default name applied.")
             objName = surf.name().replace(self.names["surface"], "")
 
-        with rcu.MayaUndoChunkManager():
-            addTo = rcu.addNodeToAssetCB(surf.container.get())
-            with rcu.NodeOrganizer(addTo):
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
+            addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(surf.container.get())
+            with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
                 n = self.getTypeBaseName(objName, self.names["joint"])
                 jnt = jc.addRigJnt(surf, n, self.names, self.rotOrder)
                 print("Joint {0} successfully added to surface!".format(
@@ -609,7 +612,7 @@ class SurfaceRigger(object):
         Get selection and determine type, pass off to correct
         control creation method."""
 
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             sel = pmc.ls(sl=True, type="transform")
             new = False
             deformers = {
@@ -644,15 +647,15 @@ class SurfaceRigger(object):
                         # average the names of the highest weighted surfaces
                         surfList = [j[1].replace(self.names["surface"], "") 
                                     for j in uvs]
-                        n = rcu.avgMayaName(surfList)
+                        n = bkTools.mayaSceneUtil.avgMayaName(surfList)
                         n = self.getTypeBaseName(n, t)
                         h.rename(n.format(type=t))
                     else:
                         # user has named it, use that instead
                         n = self.getTypeBaseName(h.name(), t)
 
-                    addTo = rcu.addNodeToAssetCB(uvs[0][1].container.get())
-                    with rcu.NodeOrganizer(addTo):
+                    addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(uvs[0][1].container.get())
+                    with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
                         ctrl = rig(h, uvs, self.rotOrder, n, self.names)
 
                     ctrl.addAttr("strength", min=-2.0, max=2, k=True, dv=1.0)
@@ -676,7 +679,7 @@ class SurfaceRigger(object):
     def rigSurfs(self, rigAll=False):
         """Slot for both rig selection and rig all.
         Get surfs & data then mirror & rig accordingly"""
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
 
             if rigAll:
                 surfs = [s for s in pmc.ls(type="transform") if hasattr(
@@ -705,8 +708,8 @@ class SurfaceRigger(object):
                 mirrored = self.mirrorRig(s, mirArgs)
                 for side in mirrored:
                     # each surface will have its own container
-                    addTo = rcu.addNodeToAssetCB(side.container.get())
-                    with rcu.NodeOrganizer(addTo):
+                    addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(side.container.get())
+                    with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
                         self.rigSurf(side)
 
     def mirrorRig(self, s, mirArgs):
@@ -764,8 +767,8 @@ class SurfaceRigger(object):
         mirSurf, mirStr = target["surf"], target["side"]
 
         jnts = surf.unriggedJnts.get()
-        addTo = rcu.addNodeToAssetCB(mirSurf.container.get())
-        with rcu.NodeOrganizer(addTo):
+        addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(mirSurf.container.get())
+        with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
             for j in jnts:
                 srcN = self.getBaseNameFromObj(j, "joint")
                 n = srcN.replace(origStr, mirStr)
@@ -899,7 +902,7 @@ class SurfaceRigger(object):
             pmc.warning("No valid controls selected to parent!")
             return
 
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             self.parentCtrls(ctrls)
 
     @qtu.SlotExceptionRaiser
@@ -910,7 +913,7 @@ class SurfaceRigger(object):
         if not pars:
             pmc.warning("No parent controls selected.")
 
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             for p in pars:
                 mirP = p.mirror.get()
 
@@ -956,7 +959,7 @@ class SurfaceRigger(object):
         """Get UVs list and other data needed to create a new weighted ctrl.
         Then create matrix-based parent relationship for arg ctrls."""
 
-        n = rcu.avgMayaName(
+        n = bkTools.mayaSceneUtil.avgMayaName(
             [s.replace(self.names["control"], "") for s in ctrls])
         n = self.getTypeBaseName(
             n, self.names["parent"] + "_" + self.names["control"]).format(
@@ -964,8 +967,8 @@ class SurfaceRigger(object):
 
         surfs = [c.surface.get() for c in ctrls]
         domSurf = sorted(surfs, key=surfs.count)[-1]
-        addTo = rcu.addNodeToAssetCB(domSurf.container.get())
-        with rcu.NodeOrganizer(addTo):
+        addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(domSurf.container.get())
+        with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
 
             parCtrl = pc.makeParentCtrl(domSurf, n, self.names, self.rotOrder)
 
@@ -997,9 +1000,9 @@ class SurfaceRigger(object):
                         "control.".format(par.name()))
             return
 
-        with rcu.MayaUndoChunkManager():
-            addTo = rcu.addNodeToAssetCB(par.surface.get().container.get())
-            with rcu.NodeOrganizer(addTo):
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
+            addTo = bkTools.mayaSceneUtil.addNodeToAssetCB(par.surface.get().container.get())
+            with bkTools.mayaSceneUtil.NodeOrganizer(addTo):
                 for ctrl in ctrls:
                     if ctrl in alreadyAffected:
                         pmc.warning("{0} is already parented to {1}.".format(
@@ -1021,7 +1024,7 @@ class SurfaceRigger(object):
             pmc.dt.Vector.xAxis, pmc.dt.Vector.xNegAxis, pmc.dt.Vector.yAxis, 
             pmc.dt.Vector.yNegAxis, pmc.dt.Vector.zAxis, pmc.dt.Vector.zNegAxis)
         
-        with rcu.MayaUndoChunkManager():
+        with bkTools.mayaSceneUtil.MayaUndoChunkManager():
             for surf in surfs:
                 fixSurfaceOrients(surf, allAxes, self.rotOrder)
 
@@ -1483,7 +1486,7 @@ def moveJointsToSurf(jnts, newSurf):
         newSurf.ws >> geoCon.target[0].targetGeometry
         
         texAttr = newSurf.layeredTexture.get().attr("inputs")
-        i = rcu.nextAvailableIndex(texAttr)
+        i = bkTools.mayaSceneUtil.nextAvailableIndex(texAttr)
         # remove from old layeredTexture, add to new
         for e in oldSurf.layeredTexture.get().attr("inputs"):
             if jnt in e.isVisible.inputs():

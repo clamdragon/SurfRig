@@ -1,4 +1,6 @@
 import pymel.core as pmc
+
+import bkTools.mayaSceneUtil
 from bkTools import rigCtrlUtil as rcu, matrixUtil as mu, surfaceUtil as su
 
 
@@ -67,8 +69,8 @@ def makeCtrlShape(name, rotOrder, shape="circle"):
         ctrl = pmc.circle(nr=(1, 0, 0), d=1, s=4, n=name)[0]
         sy = pmc.circle(nr=(0, 1, 0), d=1, s=4)[0]
         sz = pmc.circle(nr=(0, 0, 1), d=1, s=4)[0]
-        rcu.parentChildShapes(sy, ctrl)
-        rcu.parentChildShapes(sz, ctrl)
+        bkTools.mayaSceneUtil.parentChildShapes(sy, ctrl)
+        bkTools.mayaSceneUtil.parentChildShapes(sz, ctrl)
         pmc.delete(sy, sz)
 
     ctrl.rotateOrder.set(rotOrder)
@@ -150,7 +152,7 @@ def addRigJnt(surf, n, names, rotOrder):
         pmc.warning("addRigJnt input requires a nurbs surface")
         return
 
-    rcu.displayTextures()
+    bkTools.mayaSceneUtil.displayTextures()
     # pmc.joint freaks out if selection is not perfect.
     # just clear it
     pmc.select(clear=True)
@@ -244,7 +246,7 @@ def setJntColor(srf, jnt, name):
     #i = len(textureLayers.getArrayIndices())
     # connect to last index
     #i = textureLayers.getArrayIndices()[-1]
-    i = rcu.nextAvailableIndex(textureLayers)
+    i = bkTools.mayaSceneUtil.nextAvailableIndex(textureLayers)
     # .54 means we start with a yellow
     # each index offsets hue by golden ratio
     hue = (.54 + (gr * i)) % 1.0
@@ -306,12 +308,12 @@ def hiliteDimension(pOrig, pRange, ramp, name, periodic):
         # modulo the min and max, test for wrapping
         #mnMod = pmc.nt.Ramp(n=name.format(type="minMod"))
         #mn.outFloat >> mnMod.v
-        mnMod = rcu.quickModulo(name.format(type="minMod"))
+        mnMod = bkTools.mayaSceneUtil.quickModulo(name.format(type="minMod"))
         mn.outFloat >> mnMod.inputValue
 
         #mxMod = pmc.nt.Ramp(n=name.format(type="maxMod"))
         #mx.outFloat >> mxMod.v
-        mxMod = rcu.quickModulo(name.format(type="maxMod"))
+        mxMod = bkTools.mayaSceneUtil.quickModulo(name.format(type="maxMod"))
         mx.outFloat >> mxMod.inputValue
 
         # float logic + blend colors so test can be reused later

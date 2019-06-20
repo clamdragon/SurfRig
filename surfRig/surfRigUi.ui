@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SurfRigWindow</class>
+ <widget class="QMainWindow" name="SurfRigWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>434</width>
+    <height>820</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Surface Rig Wizard</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="step1Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step1">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>1: Rig settings</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QLabel" name="symLabel">
+          <property name="toolTip">
+           <string>Set the axis of symmetry for mirroring operations</string>
+          </property>
+          <property name="text">
+           <string>World symmetry</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="symAxis">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>X</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Z</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="nameLabel">
+          <property name="toolTip">
+           <string>Default name dictionary is:
+{
+&quot;convention&quot;: &quot;{name}_{num:02}_{type}&quot;,
+&quot;surface&quot;: &quot;SURF_RIG&quot;,
+&quot;rig group&quot;: &quot;SURF_RIG_GRP&quot;,
+&quot;control&quot;: &quot;CTRL&quot;,
+&quot;control group&quot;: &quot;CTRL_GRP&quot;,
+&quot;offset group&quot;: &quot;OFFSET_GRP&quot;,
+&quot;parent&quot;: &quot;PAR&quot;,
+&quot;surface controls group&quot;: &quot;SURF_CTRL_GRP&quot;,
+&quot;joint&quot;: &quot;RIG_JNT&quot;,
+&quot;joint group&quot;: &quot;JNTS_GRP&quot;
+}
+
+Load a different file to change values for any/all keys.</string>
+          </property>
+          <property name="text">
+           <string>Naming conventions</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="nameButton">
+          <property name="toolTip">
+           <string>Default name dictionary is:
+{
+&quot;convention&quot;: &quot;{name}_{num:02}_{type}&quot;,
+&quot;surface&quot;: &quot;SURF_RIG&quot;,
+&quot;rig group&quot;: &quot;SURF_RIG_GRP&quot;,
+&quot;control&quot;: &quot;CTRL&quot;,
+&quot;control group&quot;: &quot;CTRL_GRP&quot;,
+&quot;offset group&quot;: &quot;OFFSET_GRP&quot;,
+&quot;parent&quot;: &quot;PAR&quot;,
+&quot;surface controls group&quot;: &quot;SURF_CTRL_GRP&quot;,
+&quot;joint&quot;: &quot;RIG_JNT&quot;,
+&quot;joint group&quot;: &quot;JNTS_GRP&quot;
+}
+
+Load a different file to change values for any/all keys.</string>
+          </property>
+          <property name="text">
+           <string>Load JSON</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="step2Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step2">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>2: Select guide edges on mesh</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::AutoText</enum>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="surfNameLabel">
+          <property name="text">
+           <string>New surface Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="surfNameEdit">
+          <property name="placeholderText">
+           <string>e.g., face_L_eyelids</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
+        <item>
+         <widget class="QPushButton" name="newSurfButton">
+          <property name="toolTip">
+           <string>Create a NURBS surface using the selected continuous edges as a guide.</string>
+          </property>
+          <property name="text">
+           <string>Create surface from guides</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="simpleSurfButton">
+          <property name="toolTip">
+           <string>Create a 2x3 span nurbs plane at the average position of selected edges.</string>
+          </property>
+          <property name="text">
+           <string>Create simple surface</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="initSurfButton">
+          <property name="toolTip">
+           <string>Create hierarchy and attributes on selected user-made surface(s),
+allowing them to be used fully with this surface rigging tool.</string>
+          </property>
+          <property name="text">
+           <string>Initialize existing surface</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="step3Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step3">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>3: Edit surface</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="selectCVsButton">
+        <property name="text">
+         <string>Mask CVs</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="toggleJntsButton">
+        <property name="text">
+         <string>Toggle Joints</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="toggleSurfsButton">
+        <property name="text">
+         <string>Toggle Surfaces</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="step4Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step4">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>4: Add &amp; position rig joints</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLabel" name="jntNameLabel">
+          <property name="text">
+           <string>Joint Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="jntNameEdit">
+          <property name="placeholderText">
+           <string>e.g., face_L_upperEyelid</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="newJntButton">
+          <property name="toolTip">
+           <string>Add a joint to the selected surface. The joint's 'allowed area' may be
+further limited via the rangeU and rangeV attributes on the joint itself.
+When rigged, the joint will slide over its allowed area on the surface.</string>
+          </property>
+          <property name="text">
+           <string>Add new joint to surface</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="step5Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step5">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>5: Create joint rig</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="mirrorGrp">
+        <property name="title">
+         <string>Mirror</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2">
+           <item>
+            <widget class="QRadioButton" name="mirrorBoth">
+             <property name="toolTip">
+              <string>Mirror the surface and all of its joints along the axis of symmetry.
+
+Also use this option if the surface has already been mirrored.
+New joints and shape tweaks will be pushed onto the existing mirrored surface.</string>
+             </property>
+             <property name="text">
+              <string>Surface and joints</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="mirrorJnts">
+             <property name="toolTip">
+              <string>Mirror the surface's joints *onto the same surface* along the axis of symmetry.
+
+This option is for &quot;center&quot; surfaces with internal symmetry.</string>
+             </property>
+             <property name="text">
+              <string>Joints onto same surface</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="searchLabel">
+             <property name="text">
+              <string>Search:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchEdit">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="replaceLabel">
+             <property name="text">
+              <string>Replace with:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="replaceEdit"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="rigButton">
+          <property name="toolTip">
+           <string>Create controls for each unrigged joint on the surfaces.
+
+If there are no unrigged joints, it will still perform any necessary mirroring options.
+Useful for re-establishing symmetry after editing any surface with a mirror image.</string>
+          </property>
+          <property name="text">
+           <string>Rig selected surfaces</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="rigAllButton">
+          <property name="toolTip">
+           <string>Create controls for each unrigged joint on the surfaces.
+
+If there are no unrigged joints, it will still perform any necessary mirroring options.
+Useful for re-establishing symmetry after editing any surface with a mirror image.</string>
+          </property>
+          <property name="text">
+           <string>Rig all surfaces</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,2">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <item>
+           <widget class="QLabel" name="sizeLabel">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Set the gross size for the selected surfaces' control shapes. Attribute exists on each surface.</string>
+            </property>
+            <property name="text">
+             <string>Control size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="sizeEdit">
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="minimum">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99.900000000000006</double>
+            </property>
+            <property name="value">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSlider" name="sizeSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="invertedControls">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,2">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QLabel" name="distanceLabel">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Set the distance of controls from the selected surfaces. Attribute exists on each surface.</string>
+            </property>
+            <property name="text">
+             <string>Control distance</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="distanceEdit">
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99.900000000000006</double>
+            </property>
+            <property name="value">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSlider" name="distanceSlider">
+          <property name="maximum">
+           <number>50</number>
+          </property>
+          <property name="value">
+           <number>5</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="parGrp">
+        <property name="toolTip">
+         <string>Create parent controls to affect multiple joint controls in a weighted and additive way.</string>
+        </property>
+        <property name="title">
+         <string>Parent controls</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_13">
+           <item>
+            <widget class="QPushButton" name="newParButton">
+             <property name="toolTip">
+              <string>Create a new parent object for the selected controls.
+The parent's orientation is based off of the surface of the LAST selected controls.</string>
+             </property>
+             <property name="text">
+              <string>Create parent for selected</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="parExistingButton">
+             <property name="toolTip">
+              <string>Parent the first n selected controls to the last selected object</string>
+             </property>
+             <property name="text">
+              <string>Parent selected to other</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
+           <item>
+            <widget class="QPushButton" name="mirParButton">
+             <property name="toolTip">
+              <string>Mirror the selected parent controls.
+
+If a parent has already been mirrored, child weight attributes will be updated instead.</string>
+             </property>
+             <property name="text">
+              <string>Mirror selected parents</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="unparentButton">
+             <property name="toolTip">
+              <string>Remove all parents from the selected control.</string>
+             </property>
+             <property name="text">
+              <string>Unparent selected</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+        <zorder></zorder>
+        <zorder></zorder>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="step6Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_18">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="step6">
+          <property name="toolTip">
+           <string>Use the Safe Surface Edit Tool to tweak a rigged and skinned surface
+without having to worry about joint movement or bind pose.
+
+If you want to edit a surface beyond moving CVs (such as a rebuild),
+use the provided Python context manager &quot;surfEditContext&quot; to do so
+in a way that preserves joint position and skin cluster. E.G.,
+with surfRig.surfEditContext():
+    pmc.rebuildSurface()</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;6: Bind joints to mesh (recommended)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="resetBindPoseButton">
+          <property name="toolTip">
+           <string>Force a bind pose reset on the selected mesh.</string>
+          </property>
+          <property name="text">
+           <string>Reset bind pose</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fixOrientsButton">
+          <property name="toolTip">
+           <string>Sometimes, controls on the same surface may have differing orientations,
+particularly if the surface normal is nearly aligned with one of its local axes.
+
+Use this to unify control orientations for selected surfaces.</string>
+          </property>
+          <property name="text">
+           <string>Fix control orients</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="surfEditGrp">
+        <property name="toolTip">
+         <string>Use the Safe Surface Edit Tool to tweak a rigged and skinned surface
+without having to worry about joint movement or bind pose.
+
+If you want to edit a surface beyond moving CVs (such as a rebuild),
+use the provided Python context manager &quot;surfEditContext&quot; to do so
+in a way that preserves joint position and skin cluster. E.G.,
+with surfRig.surfEditContext():
+    pmc.rebuildSurface()</string>
+        </property>
+        <property name="title">
+         <string>Safe Surface Edit Tool</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_17">
+         <item>
+          <widget class="QCheckBox" name="editLockCheck">
+           <property name="toolTip">
+            <string>ON: Preserve the joints' original world-space position. Be aware that joints
+are still &quot;stuck&quot; to the surface so accuracy depends on what tweaks are made.
+OFF: Preserve joints' UV surface-relative position.
+
+Skin cluster and bind pose are safely re-defined for resulting joint xforms.</string>
+           </property>
+           <property name="text">
+            <string>Lock joints</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="editMirCheck">
+           <property name="toolTip">
+            <string>ON: Mirror any surface &amp; joint changes to the surfaces' mirror images (if applicable).
+OFF: Do not mirror changes. Allows for asymmetric tweaks to be made.</string>
+           </property>
+           <property name="text">
+            <string>Mirror edits</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="editOrigCheck">
+           <property name="toolTip">
+            <string>ON: If surfaces have deformers applied, hide the deformed shapes
+and allow editing of the original, pre-deformer shapes instead.
+OFF: Edit the post-deformer shapes.</string>
+           </property>
+           <property name="text">
+            <string>Original Shapes</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="surfaceEditButton">
+           <property name="toolTip">
+            <string>Enter Safe Surface Edit Tool.</string>
+           </property>
+           <property name="text">
+            <string>Edit skinned surfaces</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="step7Layout">
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="step7">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;7: Deform surfaces as desired&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="deformersGrp">
+        <property name="toolTip">
+         <string>The strength of mesh-guided surface rigging is its ability to define blendshape-ready regions.
+SoftMod deformers, SoftClusters (available online), and MayaMuscle systems are also highly recommended.</string>
+        </property>
+        <property name="title">
+         <string>Deformer tools</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QPushButton" name="clusterHandleButton">
+             <property name="toolTip">
+              <string>Create control shapes for selected relative-mode deformer handles.
+The controls move as their associated surfaces are deformed by other means.</string>
+             </property>
+             <property name="text">
+              <string>Control selected deformer</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setupBlendshapesButton">
+             <property name="toolTip">
+              <string>Add/update a shape under each control which drives the selected surfaces' blendshape weights.
+This allows easy and synchronizd animation of the same deformer from multiple controls.</string>
+             </property>
+             <property name="text">
+              <string>Add blends to controls</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="mergeBlendshapesButton">
+             <property name="toolTip">
+              <string>Unify the blendshape driver shapes of all selected surfaces.
+
+Any driving attributes with the same name will be merged,
+allowing multiple surface blendshapes to be driven via one channel.</string>
+             </property>
+             <property name="text">
+              <string>Merge blend controls</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

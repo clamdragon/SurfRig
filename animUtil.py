@@ -1,5 +1,5 @@
 import pymel.core as pmc
-
+from bkTools import matrixUtil as mu, mayaSceneUtil as msu
 
 __author__ = "Brendan Kelly"
 __email__ = "clamdragon@gmail.com"
@@ -14,6 +14,35 @@ resetCtrl
 reflectSelection
 reflectCtrl
 """
+
+
+def keys_to_motion_path(objs=None, axis="x", up_axis="y", wuv=(0, 1, 0)):
+    if not objs:
+        objs = pmc.selected(transforms=True)
+    with msu.MayaUndoChunkManager():
+        for obj in objs:
+            # curve from keys
+            keys = sorted(set(pmc.keyframe(obj, q=True)))
+            r = int(keys[0]), int(keys[-1]) + 1
+            pts = (obj.t.get(t=f) for f in xrange(*r))
+            c = pmc.curve(d=3, ep=pts)
+
+            # to set motion path keys, need to link current keys to u param
+            curve_keys = dict((k, c.getParamAtPoint(obj.t.get(t=k))) for k in xrange(*r))
+            pmc.cutKey(obj, t=r, cl=True)
+            mp = pmc.nt.MotionPath()
+            c.ws >> mp.geometryPath
+            mp.follow.set(True)
+            mp.fa.set(axis.upper())
+            mp.ua.set(up_axis.upper())
+            mp.wu.set(wuv)
+            mp.ac >> obj.t
+            mp.r >> obj.r
+            for t, v in curve_keys.items(): pmc.setKeyframe(mp.u, t=t, v=v)
+            pmc.filterCurve(mp.u, f="simplify", tto=.05)
+
+            # markers clutter and slow
+            pmc.delete(mp.pmt.inputs())
 
 
 def getUnkeyedInSel():
